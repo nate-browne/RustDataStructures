@@ -7,7 +7,7 @@ use priority_queue::PriorityQueue;
 const PROMPT: &str = "Enter a command ((e)mpty, (s)ize, p(u)sh, (p)op, (t)op, (q)uit): ";
 
 fn grab_input(prompt: &str) -> String {
-    print!("{}", prompt);
+    print!("{prompt}");
     stdout().flush().unwrap();
 
     let mut option = String::new();
