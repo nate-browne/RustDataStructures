@@ -4,7 +4,7 @@ use std::io::{Write, stdout, stdin};
 mod stack;
 use stack::Stack;
 
-const PROMPT: &str = "Please enter a command (is e(m)pty, (s)ize, (t)op, (p)ush, p(o)p, (q)uit): ";
+const PROMPT: &str = "Please enter a command (is (e)mpty, (s)ize, (t)op, (p)ush, p(o)p, (q)uit): ";
 
 fn grab_input(prompt: &str) -> String {
     print!("{prompt}");
@@ -31,7 +31,7 @@ fn main() {
         let input = grab_input(PROMPT);
 
         match input.as_str() {
-            "m" => {
+            "e" => {
                 let val = if stack.empty() { "is" } else { "is not" };
                 println!("Stack {val} empty.");
             },
