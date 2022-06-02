@@ -7,7 +7,7 @@ use stack::Stack;
 const PROMPT: &str = "Please enter a command (is e(m)pty, (s)ize, (t)op, (p)ush, p(o)p, (q)uit): ";
 
 fn grab_input(prompt: &str) -> String {
-    print!("{}", prompt);
+    print!("{prompt}");
     stdout().flush().unwrap();
 
     let mut option = String::new();
