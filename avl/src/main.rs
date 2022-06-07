@@ -1,10 +1,10 @@
 use std::process::exit;
 use std::io::{Write, stdout, stdin};
 
-mod avl;
-use avl::AVL;
+mod bst;
+use bst::BST;
 
-const PROMPT: &str = "Enter a command ((c)ontains, i(s)_empty, (e)mpty, (i)nsert, (r)emove, (p)rint, (f)ind_min, find_(m)ax, (q)uit): ";
+const PROMPT: &str = "Enter a command ((c)ontains, i(s)_empty, (e)mpty, (i)nsert, (p)rint, (f)ind_min, find_(m)ax, (q)uit): ";
 
 fn grab_input(prompt: &str) -> String {
     print!("{prompt}");
@@ -23,7 +23,7 @@ fn grab_input(prompt: &str) -> String {
 }
 
 fn main() {
-    let mut tree: AVL<String> = AVL::new();
+    let mut tree: BST<String> = BST::new();
 
     loop {
         println!();
@@ -40,22 +40,13 @@ fn main() {
                 println!("Tree is empty: {result}");
             },
             "e" => {
-                tree = AVL::new(); // this should run the destructor
+                tree = BST::new(); // this should run the destructor
                 println!("Tree is empty.");
             },
             "i" => {
                 let input = grab_input("Enter a string to insert: ");
                 tree.insert(input.clone());
                 println!("String {input} inserted.");
-            },
-            "r" => {
-                let input = grab_input("Enter a string to remove: ");
-                if !tree.contains(&input) {
-                    println!("String {input} not in the tree.");
-                } else {
-                    tree.remove(&input);
-                    println!("String {input} removed.");
-                }
             },
             "p" => tree.print(),
             "f" => {

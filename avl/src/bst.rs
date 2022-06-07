@@ -2,11 +2,9 @@ use std::cmp::Ordering::{Equal, Greater, Less};
 use std::fmt::Debug;
 use std::cmp::max;
 
-type HeapNode<T> = Option<Box<AVLNode<T>>>;
+type HeapNode<T> = Option<Box<BSTNode<T>>>;
 
-const THRESHOLD: isize = 1;
-
-struct AVLNode<T: Ord + Debug> {
+struct BSTNode<T: Ord + Debug> {
     value: T,
     left: HeapNode<T>,
     right: HeapNode<T>,
@@ -14,9 +12,9 @@ struct AVLNode<T: Ord + Debug> {
     balance: isize,
 }
 
-impl<T: Ord + Debug> AVLNode<T> {
-    fn new(value: T) -> AVLNode<T> {
-        AVLNode {
+impl<T: Ord + Debug> BSTNode<T> {
+    fn new(value: T) -> BSTNode<T> {
+        BSTNode {
             value,
             left: None,
             right: None,
@@ -45,20 +43,20 @@ impl<T: Ord + Debug> AVLNode<T> {
             Greater => {
                 match self.right {
                     Some(ref mut node) => node.insert(value),
-                    None => self.right = Some(Box::from(AVLNode::new(value))),
+                    None => self.right = Some(Box::from(BSTNode::new(value))),
                 }
             },
             Less => {
                 match self.left {
                     Some(ref mut node) => node.insert(value),
-                    None => self.left = Some(Box::from(AVLNode::new(value))),
+                    None => self.left = Some(Box::from(BSTNode::new(value))),
                 }
             }
         }
         self.balance();
     }
 
-    fn height(&self, node: &HeapNode<T>) -> isize {
+    fn height(node: &HeapNode<T>) -> isize {
         match node {
             Some(n) => n.height,
             None => -1,
@@ -66,37 +64,13 @@ impl<T: Ord + Debug> AVLNode<T> {
     }
 
     fn balance(&mut self) {
-        let l_height = self.height(&self.left);
-        let r_height = self.height(&self.right);
+        let l_height = BSTNode::height(&self.left);
+        let r_height = BSTNode::height(&self.right);
 
 
         self.height = max(l_height, r_height) + 1;
         self.balance = l_height - r_height;
-
-        if self.balance.abs() > THRESHOLD {
-            if self.balance < 0 {
-                if self.right.as_ref().unwrap().balance < 0 {
-                    self.double_left();
-                } else {
-                    self.rotate_left();
-                }
-            } else if self.balance > 0 {
-                if self.left.as_ref().unwrap().balance < 0 {
-                    self.double_right();
-                } else {
-                    self.rotate_right();
-                }
-            }
-        }
     }
-
-    fn double_left(&mut self) {}
-
-    fn rotate_left(&mut self) {}
-
-    fn double_right(&mut self) {}
-
-    fn rotate_right(&mut self) {}
 
     fn find_min(&self) -> &T {
         match &self.left {
@@ -142,15 +116,15 @@ impl<T: Ord + Debug> AVLNode<T> {
     }
 }
 
-pub struct AVL<T: Ord + Debug> {
+pub struct BST<T: Ord + Debug> {
     root: HeapNode<T>,
     size: isize,
 }
 
-impl<T: Ord + Debug> AVL<T> {
+impl<T: Ord + Debug> BST<T> {
 
-    pub fn new() -> AVL<T> {
-        AVL {
+    pub fn new() -> BST<T> {
+        BST {
             root: None,
             size: 0,
         }
@@ -177,13 +151,11 @@ impl<T: Ord + Debug> AVL<T> {
     pub fn insert(&mut self, value: T) {
         match self.root {
             Some(ref mut node) => node.insert(value),
-            None => self.root = Some(Box::from(AVLNode::new(value))),
+            None => self.root = Some(Box::from(BSTNode::new(value))),
         }
         self.size += 1;
         self.check();
     }
-
-    pub fn remove(&mut self, value: &T) {}
 
     pub fn print(&self) {
         match &self.root {
