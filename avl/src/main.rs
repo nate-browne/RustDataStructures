@@ -32,7 +32,7 @@ fn main() {
         match input.as_str() {
             "c" => {
                 let input = grab_input("Enter a string to search for: ");
-                let result = if tree.contains(&input) { "true" } else { "false" };
+                let result = tree.contains(&input);
                 println!("String {input} in tree: {result}");
             },
             "s" => {

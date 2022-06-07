@@ -6,7 +6,6 @@ type HeapNode<T> = Option<Box<AVLNode<T>>>;
 
 const THRESHOLD: isize = 1;
 
-#[derive(Debug)]
 struct AVLNode<T: Ord + Debug> {
     value: T,
     left: HeapNode<T>,
@@ -127,9 +126,22 @@ impl<T: Ord + Debug> AVLNode<T> {
             None => (),
         }
     }
+
+    fn contains(&self, value: &T) -> bool {
+        match value.cmp(&self.value) {
+            Equal => true,
+            Greater => match &self.right {
+                Some(node) => node.contains(value),
+                None => false,
+            },
+            Less => match &self.left {
+                Some(node) => node.contains(value),
+                None => false,
+            }
+        }
+    }
 }
 
-#[derive(Debug)]
 pub struct AVL<T: Ord + Debug> {
     root: HeapNode<T>,
     size: isize,
@@ -152,7 +164,10 @@ impl<T: Ord + Debug> AVL<T> {
     }
 
     pub fn contains(&self, value: &T) -> bool {
-        false // not implemented yet!
+        match &self.root {
+            Some(node) => node.contains(value),
+            None => false,
+        }
     }
 
     pub fn is_empty(&self) -> bool {
