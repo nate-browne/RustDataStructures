@@ -99,6 +99,20 @@ impl<T: Ord + Debug> AVLNode<T> {
 
     fn rotate_right(&mut self) {}
 
+    fn find_min(&self) -> &T {
+        match &self.left {
+            Some(node) => node.find_min(),
+            None => &self.value,
+        }
+    }
+
+    fn find_max(&self) -> &T {
+        match &self.right {
+            Some(node) => node.find_max(),
+            None => &self.value,
+        }
+    }
+
     fn print(&self) {
         match &self.left {
             Some(node) => node.print(),
@@ -145,15 +159,12 @@ impl<T: Ord + Debug> AVL<T> {
         self.size == 0
     }
 
-    pub fn empty(&mut self) {
-        self.size = 0;
-    }
-
     pub fn insert(&mut self, value: T) {
         match self.root {
             Some(ref mut node) => node.insert(value),
             None => self.root = Some(Box::from(AVLNode::new(value))),
         }
+        self.size += 1;
         self.check();
     }
 
@@ -166,11 +177,17 @@ impl<T: Ord + Debug> AVL<T> {
         };
     }
 
-    pub fn find_min(&self) -> &T {
-        panic!("Not implemented yet!");
+    pub fn find_min(&self) -> Result<&T, &str> {
+        match &self.root {
+            Some(node) => Ok(node.find_min()),
+            None => Err("Tree is empty."),
+        }
     }
 
-    pub fn find_max(&self) -> &T {
-        panic!("Not implemented yet!");
+    pub fn find_max(&self) -> Result<&T, &str> {
+        match &self.root {
+            Some(node) => Ok(node.find_max()),
+            None => Err("Tree is empty."),
+        }
     }
 }

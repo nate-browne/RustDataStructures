@@ -40,7 +40,7 @@ fn main() {
                 println!("Tree is empty: {result}");
             },
             "e" => {
-                tree.empty();
+                tree = AVL::new(); // this should run the destructor
                 println!("Tree is empty.");
             },
             "i" => {
@@ -59,11 +59,23 @@ fn main() {
             },
             "p" => tree.print(),
             "f" => {
-                let m_val = tree.find_min();
+                let m_val = match tree.find_min() {
+                    Ok(val) => val,
+                    Err(e) => {
+                        eprintln!("Error finding min: {e}");
+                        continue;
+                    }
+                };
                 println!("Min value is {m_val}");
             },
             "m" => {
-                let m_val = tree.find_max();
+                let m_val = match tree.find_max() {
+                    Ok(val) => val,
+                    Err(e) => {
+                        eprintln!("Error finding min: {e}");
+                        continue;
+                    }
+                };
                 println!("Max value is {m_val}");
             },
             "q" => break,
