@@ -1,12 +1,16 @@
 use std::cmp::Ordering::{Equal, Greater, Less};
+use std::cmp::max;
 
 type HeapNode<T> = Option<Box<AVLNode<T>>>;
+
+const THRESHOLD: isize = 1;
 
 struct AVLNode<T: Ord> {
     value: T,
     left: HeapNode<T>,
     right: HeapNode<T>,
     height: isize,
+    balance: isize,
 }
 
 impl<T: Ord> AVLNode<T> {
@@ -16,20 +20,102 @@ impl<T: Ord> AVLNode<T> {
             left: None,
             right: None,
             height: 0,
+            balance: 0,
+        }
+    }
+
+    fn check(&mut self) {
+        match self.left {
+            Some(ref mut node) => node.check(),
+            None => (),
+        }
+
+        match self.right {
+            Some(ref mut node) => node.check(),
+            None => (),
+        }
+
+        self.balance();
+    }
+
+    fn insert(&mut self, value: T) {
+        match value.cmp(&self.value) {
+            Equal => (), // do nothing with duplicate insertions
+            Greater => {
+                match self.right {
+                    Some(ref mut node) => node.insert(value),
+                    None => self.right = Some(Box::from(AVLNode::new(value))),
+                }
+            },
+            Less => {
+                match self.left {
+                    Some(ref mut node) => node.insert(value),
+                    None => self.left = Some(Box::from(AVLNode::new(value))),
+                }
+            }
+        }
+        self.balance();
+    }
+
+    fn balance(&mut self) {
+        let l_height = self.height(&self.left);
+        let r_height = self.height(&self.right);
+
+
+        self.height = max(l_height, r_height) + 1;
+        self.balance = l_height - r_height;
+
+        if self.balance.abs() > THRESHOLD {
+            if self.balance < 0 {
+                if self.right.as_ref().unwrap().balance < 0 {
+                    self.double_left();
+                } else {
+                    self.rotate_left();
+                }
+            } else if self.balance > 0 {
+                if self.left.as_ref().unwrap().balance < 0 {
+                    self.double_right();
+                } else {
+                    self.rotate_right();
+                }
+            }
+        }
+    }
+
+    fn double_left(&mut self) {}
+
+    fn rotate_left(&mut self) {}
+
+    fn double_right(&mut self) {}
+
+    fn rotate_right(&mut self) {}
+
+    fn height(&self, node: &HeapNode<T>) -> isize {
+        match node {
+            Some(n) => n.height,
+            None => -1,
         }
     }
 }
 
 pub struct AVL<T: Ord> {
     root: HeapNode<T>,
-    num_elements: usize,
+    size: isize,
 }
 
 impl<T: Ord> AVL<T> {
+
     pub fn new() -> AVL<T> {
         AVL {
             root: None,
-            num_elements: 0,
+            size: 0,
+        }
+    }
+
+    fn check(&mut self) {
+        match self.root {
+            Some(ref mut node) => node.check(),
+            None => (),
         }
     }
 
@@ -38,20 +124,30 @@ impl<T: Ord> AVL<T> {
     }
 
     pub fn is_empty(&self) -> bool {
-        self.num_elements == 0
+        self.size == 0
     }
 
     pub fn empty(&mut self) {
-        self.num_elements = 0;
+        self.size = 0;
     }
 
-    pub fn insert(&mut self, value: T) {}
+    pub fn insert(&mut self, value: T) {
+        match self.root {
+            Some(ref mut node) => node.insert(value),
+            None => self.root = Some(Box::from(AVLNode::new(value))),
+        }
+        self.check();
+    }
 
     pub fn remove(&mut self, value: &T) {}
 
     pub fn print(&self) {}
 
-    pub fn find_min(&self) -> &T {}
+    pub fn find_min(&self) -> &T {
+        panic!("Not implemented yet!");
+    }
 
-    pub fn find_max(&self) -> &T {}
+    pub fn find_max(&self) -> &T {
+        panic!("Not implemented yet!");
+    }
 }

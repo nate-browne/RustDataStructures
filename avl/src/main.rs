@@ -62,7 +62,7 @@ fn main() {
                 println!("Min value is {m_val}");
             },
             "m" => {
-                let m_val = tree.find_min();
+                let m_val = tree.find_max();
                 println!("Max value is {m_val}");
             },
             "q" => break,
