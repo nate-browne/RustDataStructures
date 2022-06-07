@@ -1,11 +1,13 @@
 use std::cmp::Ordering::{Equal, Greater, Less};
+use std::fmt::Debug;
 use std::cmp::max;
 
 type HeapNode<T> = Option<Box<AVLNode<T>>>;
 
 const THRESHOLD: isize = 1;
 
-struct AVLNode<T: Ord> {
+#[derive(Debug)]
+struct AVLNode<T: Ord + Debug> {
     value: T,
     left: HeapNode<T>,
     right: HeapNode<T>,
@@ -13,7 +15,7 @@ struct AVLNode<T: Ord> {
     balance: isize,
 }
 
-impl<T: Ord> AVLNode<T> {
+impl<T: Ord + Debug> AVLNode<T> {
     fn new(value: T) -> AVLNode<T> {
         AVLNode {
             value,
@@ -57,6 +59,13 @@ impl<T: Ord> AVLNode<T> {
         self.balance();
     }
 
+    fn height(&self, node: &HeapNode<T>) -> isize {
+        match node {
+            Some(n) => n.height,
+            None => -1,
+        }
+    }
+
     fn balance(&mut self) {
         let l_height = self.height(&self.left);
         let r_height = self.height(&self.right);
@@ -90,20 +99,29 @@ impl<T: Ord> AVLNode<T> {
 
     fn rotate_right(&mut self) {}
 
-    fn height(&self, node: &HeapNode<T>) -> isize {
-        match node {
-            Some(n) => n.height,
-            None => -1,
+    fn print(&self) {
+        match &self.left {
+            Some(node) => node.print(),
+            None => (),
+        }
+        println!(
+            "height: {} balance: {} value: {:?}",
+            self.height, self.balance, self.value
+        );
+        match &self.right {
+            Some(node) => node.print(),
+            None => (),
         }
     }
 }
 
-pub struct AVL<T: Ord> {
+#[derive(Debug)]
+pub struct AVL<T: Ord + Debug> {
     root: HeapNode<T>,
     size: isize,
 }
 
-impl<T: Ord> AVL<T> {
+impl<T: Ord + Debug> AVL<T> {
 
     pub fn new() -> AVL<T> {
         AVL {
@@ -141,7 +159,12 @@ impl<T: Ord> AVL<T> {
 
     pub fn remove(&mut self, value: &T) {}
 
-    pub fn print(&self) {}
+    pub fn print(&self) {
+        match &self.root {
+            Some(node) => node.print(),
+            None => println!("Tree is empty.",)
+        };
+    }
 
     pub fn find_min(&self) -> &T {
         panic!("Not implemented yet!");

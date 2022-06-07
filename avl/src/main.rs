@@ -26,6 +26,7 @@ fn main() {
     let mut tree: AVL<String> = AVL::new();
 
     loop {
+        println!();
         let input = grab_input(PROMPT);
 
         match input.as_str() {
