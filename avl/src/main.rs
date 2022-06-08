@@ -36,7 +36,7 @@ fn main() {
                 println!("String {input} in tree: {result}");
             },
             "s" => {
-                let result = if tree.is_empty() { "true" } else { "false" };
+                let result = tree.is_empty();
                 println!("Tree is empty: {result}");
             },
             "e" => {
