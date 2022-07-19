@@ -64,7 +64,7 @@ fn main() {
             "p" => match pq.pop() {
                 Ok(_) => println!("Top value removed"),
                 Err(e) => eprintln!("PriorityQueue error: {e}"),
-            }
+            },
             "t" => match pq.top() {
                 Ok(val) => println!("Value at top: {val}"),
                 Err(e) => eprintln!("PriorityQueue error: {e}"),
