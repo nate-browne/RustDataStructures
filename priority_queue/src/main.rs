@@ -1,5 +1,5 @@
+use std::io::{stdin, stdout, Write};
 use std::process::exit;
-use std::io::{Write, stdout, stdin};
 
 mod priority_queue;
 use priority_queue::PriorityQueue;
@@ -40,13 +40,12 @@ fn main() {
 
     match input.as_str() {
         "y" => min_heap = true,
-        _ => ()
+        _ => (),
     };
 
     let mut pq = PriorityQueue::<usize>::new(!min_heap);
 
     loop {
-
         println!("");
         let input = grab_input(PROMPT);
 
@@ -54,23 +53,21 @@ fn main() {
             "e" => {
                 let res = if pq.empty() { "is" } else { "is not" };
                 println!("Priority queue {res} empty");
-            },
+            }
             "s" => println!("Priority queue has {} elements.", pq.size()),
             "u" => {
                 let val = grab_input("Enter a value to push: ");
                 let val = convert_to_num(val);
                 pq.push(val);
                 println!("Value {val} pushed.");
-            },
-            "p" => {
-                pq.pop();
-                println!("Top value removed.");
-            },
-            "t" => {
-                match pq.top() {
-                    Ok(val) => println!("Value at top: {val}"),
-                    Err(e) => eprintln!("PriorityQueue error: {e}"),
-                }
+            }
+            "p" => match pq.pop() {
+                Ok(_) => println!("Top value removed"),
+                Err(e) => eprintln!("PriorityQueue error: {e}"),
+            }
+            "t" => match pq.top() {
+                Ok(val) => println!("Value at top: {val}"),
+                Err(e) => eprintln!("PriorityQueue error: {e}"),
             },
             "q" => break,
             _ => println!("Command {input} is not valid."),

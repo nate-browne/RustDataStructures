@@ -74,7 +74,6 @@ impl<T: Ord> Heap<T> {
     }
 
     fn heapify_up_max(&mut self, i: usize) {
-
         // Make sure we're not the root and that the parent violates
         // the heap property
         if i > 0 {
@@ -83,14 +82,13 @@ impl<T: Ord> Heap<T> {
                 Less => {
                     self.vec.swap(i, parent);
                     self.heapify_up_max(parent);
-                },
+                }
                 _ => (),
             }
         }
     }
 
     fn heapify_up_min(&mut self, i: usize) {
-
         // Make sure we're not the root and that the parent violates
         // the heap property
         if i > 0 {
@@ -99,16 +97,14 @@ impl<T: Ord> Heap<T> {
                 Greater => {
                     self.vec.swap(i, parent);
                     self.heapify_up_min(parent);
-                },
+                }
                 _ => (),
             }
         }
     }
 
     pub fn new() -> Heap<T> {
-        Heap {
-            vec: Vec::new(),
-        }
+        Heap { vec: Vec::new() }
     }
 
     pub fn size(&self) -> usize {

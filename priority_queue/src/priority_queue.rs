@@ -26,11 +26,8 @@ impl<T: Ord> PriorityQueue<T> {
         self.hp.insert(data, self.max)
     }
 
-    pub fn pop(&mut self) {
-        match self.hp.remove(self.max) {
-            Ok(_) => (),
-            Err(er) => eprintln!("PriorityQueue error: {er}"),
-        }
+    pub fn pop(&mut self) -> Result<(), &str> {
+        self.hp.remove(self.max)
     }
 
     pub fn top(&self) -> Result<&T, &str> {
